@@ -1,5 +1,7 @@
 use anyhow::Result;
-use crate::db::types::models::{ModelProviderRow, Prompt, PromptComponent, PromptDirectory};
+use crate::db::types::models::ModelProviderRow;
+
+// Removed: use async_openai::types::Prompt; // no longer needed
 
 #[derive(Clone, Debug)]
 pub struct ModelRepository {
@@ -182,9 +184,10 @@ pub struct PromptComponent {
     pub updated_at: chrono::NaiveDateTime,
 }
 
-// --- Prompt (partial, for directory support) ---
+// --- Prompt ---
+// Rename the local Prompt type to DbPrompt so that you can derive traits
 #[derive(Debug, Clone)]
-pub struct Prompt {
+pub struct DbPrompt {
     pub id: i64,
     pub key: String,
     pub current_prompt_version_id: Option<i64>,

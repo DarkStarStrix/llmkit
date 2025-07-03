@@ -251,6 +251,7 @@ dependencies = [
  "os_pipe",
  "password-hash",
  "rand 0.9.0",
+ "regex",
  "reqwest 0.11.27",
  "reqwest-eventsource",
  "serde",

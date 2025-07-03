@@ -1,3 +1,10 @@
+// IMPORTANT: SQLx query macros validate SQL at compile time using DATABASE_URL.
+// To fix the error, use one of the options below:
+// 1. Set DATABASE_URL before building, e.g.,
+//      Windows CMD:    set DATABASE_URL=sqlite://C:/Users/kunya/PycharmProjects/llmkit/backend/llmkit.db
+//      PowerShell:     $env:DATABASE_URL="sqlite://C:/Users/kunya/PycharmProjects/llmkit/backend/llmkit.db"
+// 2. Alternatively, run `cargo sqlx prepare` to generate an offline query cache.
+
 use anyhow::Result;
 use crate::db::types::tool::ToolRow;
 
@@ -200,7 +207,7 @@ impl ToolRepository {
     pub async fn get_prompt_versions_by_tool(
         &self,
         tool_id: i64,
-    ) -> Result<Vec<i64>> {
+    ) -> anyhow::Result<Vec<i64>> {
         let rows = sqlx::query!(
             r#"
             SELECT prompt_version_id
@@ -215,12 +222,14 @@ impl ToolRepository {
         Ok(rows.into_iter().map(|row| row.prompt_version_id).collect())
     }
     
+    // This method uses sqlx::query_as! which is validated at compile time.
+    // Ensure that DATABASE_URL is set or cargo sqlx prepare has been executed.
     pub async fn get_tools_by_prompt_version(
         &self,
         prompt_version_id: i64,
-    ) -> Result<Vec<ToolRow>> {
+    ) -> anyhow::Result<Vec<crate::db::types::tool::ToolRow>> {
         let tools = sqlx::query_as!(
-            ToolRow,
+            crate::db::types::tool::ToolRow,
             r#"
             SELECT t.id, t.name, t.tool_name, t.description, t.parameters, t.strict, t.created_at, t.updated_at
             FROM tool t

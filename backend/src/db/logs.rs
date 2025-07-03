@@ -1,3 +1,10 @@
+// IMPORTANT: SQLx query macros need a live database connection at compile time.
+// Make sure to set DATABASE_URL before building.
+// For example:
+//   On bash: export DATABASE_URL="sqlite://C:/Users/kunya/PycharmProjects/llmkit/backend/llmkit.db"
+//   On PowerShell: $env:DATABASE_URL="sqlite://C:/Users/kunya/PycharmProjects/llmkit/backend/llmkit.db"
+// Alternatively, run `cargo sqlx prepare` to generate an offline query cache.
+
 use anyhow::Result;
 use crate::db::types::log::{LogRow, LogRowModel};
 
@@ -226,4 +233,3 @@ impl LogRepository {
         Ok(log)
     }
 }
-
